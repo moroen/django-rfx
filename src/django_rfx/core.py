@@ -17,6 +17,7 @@ class RFXhandler:
     core = None
     rfxcom_device = None
     modes_list = []
+    event_callbacks = []
 
     def __new__(cls):
         if not hasattr(cls, "instance"):
@@ -70,15 +71,19 @@ class RFXhandler:
 
     def rfx_callback(self, event):
         log.debug("Received {}".format(event))
+        for func in self.event_callbacks:
+            func(event)
+
         return
-        if isinstance(event, RFXtrx.SensorEvent):
-            log.debug("Received sensor event: {}".format(event))
-            packet_type = event.device.packettype
-            create_or_update(packet_type, event)
-        elif isinstance(event, RFXtrx.ControlEvent):
-            log.debug("Received control event {} - {}".format(event, event.device))
-        else:
-            log.debug("Received unknown event {}".format(event))
+   
+
+    def add_callback(self):
+        def wrapper(func):
+            log.debug("Adding callback {}".format(func))
+            self.event_callbacks.append(func)
+            return func
+        
+        return wrapper
 
     def connect(self, device=None):
         # from .handlers import rfx_callback
@@ -118,14 +123,14 @@ class RFXhandler:
         # except Exception as e:
         #    print(type(e).__name__)
 
-    def reconnec(self):
-        if self.core is None:
-            log.debug("Reconnect - Not connected")
-        else:
-            log.debug("Closing connection")
-            self.core.close_connection()
-        log.debug("Reconnecting")
-        self.connect()
+    # def reconnec(self):
+    #     if self.core is None:
+    #         log.debug("Reconnect - Not connected")
+    #     else:
+    #         log.debug("Closing connection")
+    #         self.core.close_connection()
+    #     log.debug("Reconnecting")
+    #     self.connect()
 
     def disconnect(self):
         if self.core is not None:
@@ -137,6 +142,10 @@ class RFXhandler:
             log.debug("Disconnect called, but not connected")
 
 
+   
+        
+        
+
 _instance = RFXhandler()
 
 connect = _instance.connect
@@ -144,6 +153,7 @@ disconnect = _instance.disconnect
 set_state = _instance.set_state
 set_level = _instance.set_level
 
+callback = _instance.add_callback
 
 def reconnect(device=None):
     global _instance
