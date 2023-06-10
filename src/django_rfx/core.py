@@ -71,6 +71,7 @@ class RFXhandler:
 
     def rfx_callback(self, event):
         log.debug("Received {}".format(event))
+        # id, unit = event.device.id_string.split(":")
         for func in self.event_callbacks:
             func(event)
 

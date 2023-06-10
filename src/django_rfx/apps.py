@@ -41,10 +41,10 @@ class DjangoRfxConfig(AppConfig):
                     device = new_value if key == "RFX_DEVICE" else config.RFX_DEVICE
 
                     log.debug(
-                        "Constance settings changed, reconnecting to {}}".format(device)
+                        "Constance settings changed, reconnecting to {}".format(device)
                     )
 
-                    reconnect(host=host, port=port)
+                    reconnect(device=device)
 
                 connect(device=config.RFX_DEVICE)
             else:
