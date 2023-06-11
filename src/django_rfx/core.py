@@ -120,7 +120,7 @@ class RFXhandler:
             time.sleep(1)
             self.connect()
         except socket_error:
-            print("Shite")
+            log.error("Unable to connect, socket_error")
         # except Exception as e:
         #    print(type(e).__name__)
 
