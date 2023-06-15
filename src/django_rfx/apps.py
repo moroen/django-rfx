@@ -2,7 +2,7 @@ from django.apps import AppConfig
 from django.dispatch import receiver
 from django.conf import settings
 
-from .core import connect, disconnect, reconnect
+from .core import connect, disconnect, reconnect, set_modes
 import logging
 from os import environ
 
@@ -14,10 +14,16 @@ class DjangoRfxConfig(AppConfig):
     name = "django_rfx"
 
     def ready(self) -> None:
-        if not (
-            environ.get("RUN_MAIN")
-        ):
+        if not (environ.get("RUN_MAIN")):
             return
+
+        from .models import Protocol
+
+        modes = []
+        for proto in Protocol.objects.filter(enabled=True):
+            modes.append(proto.description)
+
+        set_modes(modes)
 
         config = getattr(settings, "RFX_CONFIG", None)
         if config is None:
@@ -26,7 +32,7 @@ class DjangoRfxConfig(AppConfig):
             use_constance = (
                 config["USE_CONSTANCE"] if "USE_CONSTANCE" in config else False
             )
-            
+
             if use_constance:
                 log.debug("Using constance")
                 from constance import config

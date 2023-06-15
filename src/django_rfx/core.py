@@ -76,14 +76,13 @@ class RFXhandler:
             func(event)
 
         return
-   
 
     def add_callback(self):
         def wrapper(func):
             log.debug("Adding callback {}".format(func))
             self.event_callbacks.append(func)
             return func
-        
+
         return wrapper
 
     def connect(self, device=None):
@@ -133,6 +132,10 @@ class RFXhandler:
     #     log.debug("Reconnecting")
     #     self.connect()
 
+    def set_modes(self, modelist):
+        log.debug("Setting modes to {}".format(modelist))
+        self.modes_list = modelist
+
     def disconnect(self):
         if self.core is not None:
             log.debug("Closing connection")
@@ -143,10 +146,6 @@ class RFXhandler:
             log.debug("Disconnect called, but not connected")
 
 
-   
-        
-        
-
 _instance = RFXhandler()
 
 connect = _instance.connect
@@ -155,6 +154,8 @@ set_state = _instance.set_state
 set_level = _instance.set_level
 
 callback = _instance.add_callback
+set_modes = _instance.set_modes
+
 
 def reconnect(device=None):
     global _instance

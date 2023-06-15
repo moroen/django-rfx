@@ -1,4 +1,3 @@
-
 PacketTypes = {
     "0x01": "Status",
     "0x03": "Undecoded",
@@ -29,5 +28,34 @@ PacketTypes = {
     "0x5C": "Energy5",
     "0x59": "Energy1",
     "0x60": "Cartelectronic",
-    "0x71": "RfxMeter"
+    "0x71": "RfxMeter",
+}
+
+Protocols = {
+    "ac": True,
+    "arc": True,
+    "ati": False,
+    "blindst0": False,
+    "blindst1": False,
+    "blyss": False,
+    "byronsx": False,
+    "fineoffset": True,
+    "fs20": False,
+    "hideki": False,
+    "homeconfort": False,
+    "homeeasy": False,
+    "imagintronix": False,
+    "keeloq": False,
+    "lacrosse": False,
+    "lighting4": False,
+    "lightwaverf": False,
+    "meiantech": False,
+    "mertik": False,
+    "oregon": False,
+    "proguard": False,
+    "rsl": False,
+    "rubicson": False,
+    "undecoded": False,
+    "visonic": False,
+    "x10": False,
 }
