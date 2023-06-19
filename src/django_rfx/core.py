@@ -88,11 +88,12 @@ class RFXhandler:
     def connect(self, device=None):
         # from .handlers import rfx_callback
         self.rfxcom_device = device if device is not None else self.rfxcom_device
-        d = self.rfxcom_device.split(":")
-        if len(d) == 2:
-            self.rfxcom_device = (d[0], int(d[1]))
-        else:
-            self.rfxcom_device = d[0]
+        if not isinstance(device, tuple):
+            d = self.rfxcom_device.split(":")
+            if len(d) == 2:
+                self.rfxcom_device = (d[0], int(d[1]))
+            else:
+                self.rfxcom_device = d[0]
 
         if isinstance(self.rfxcom_device, tuple):
             proto = RFXtrx.PyNetworkTransport
@@ -132,9 +133,18 @@ class RFXhandler:
     #     log.debug("Reconnecting")
     #     self.connect()
 
-    def set_modes(self, modelist):
-        log.debug("Setting modes to {}".format(modelist))
-        self.modes_list = modelist
+    def set_modes(self, modelist=None):
+        if modelist is None:
+            from .models import Protocol
+
+            modes = []
+            for proto in Protocol.objects.filter(enabled=True):
+                modes.append(proto.description)
+        else:
+            modes = modelist
+
+        log.debug("Setting modes to {}".format(modes))
+        self.modes_list = modes
 
     def disconnect(self):
         if self.core is not None:
@@ -161,4 +171,5 @@ def reconnect(device=None):
     global _instance
     device = _instance.rfxcom_device if device is None else device
     _instance.disconnect()
+    # _instance = RFXhandler()
     _instance.connect(device)

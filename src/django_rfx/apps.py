@@ -17,13 +17,7 @@ class DjangoRfxConfig(AppConfig):
         if not (environ.get("RUN_MAIN")):
             return
 
-        from .models import Protocol
-
-        modes = []
-        for proto in Protocol.objects.filter(enabled=True):
-            modes.append(proto.description)
-
-        set_modes(modes)
+        set_modes()
 
         config = getattr(settings, "RFX_CONFIG", None)
         if config is None:
