@@ -43,9 +43,15 @@ class DjangoRfxConfig(AppConfig):
                         "Constance settings changed, reconnecting to {}".format(device)
                     )
 
-                    reconnect(device=device)
+                    if config.RFX_ENABLE:
+                        reconnect(device=device)
+                    else:
+                        log.debug("Disabled by settings")
 
-                connect(device=config.RFX_DEVICE)
+                if config.RFX_ENABLE:
+                    connect(device=config.RFX_DEVICE)
+                else:
+                    log.debug("Disabled by settings")
             else:
                 if "DEVICE" in config:
                     device = config["DEVICE"]
